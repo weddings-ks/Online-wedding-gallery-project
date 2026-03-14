@@ -21,15 +21,29 @@ function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const raw = await res.text();
+      console.log("LOGIN STATUS:", res.status);
+      console.log("LOGIN RESPONSE:", raw);
+
+      let data = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        throw new Error(raw || "Backend nuk ktheu JSON.");
+      }
 
       if (!res.ok) {
         throw new Error(data.message || "Gabim gjatë login.");
       }
 
+      if (!data.token) {
+        throw new Error("Token mungon nga backend.");
+      }
+
       localStorage.setItem("token", data.token);
       window.location.reload();
     } catch (err) {
+      console.error("LOGIN ERROR:", err);
       setError(err.message || "Gabim gjatë login.");
     }
   };
