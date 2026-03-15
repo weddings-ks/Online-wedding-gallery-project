@@ -11,18 +11,14 @@ const publicRoutes = require("./routes/publicRoutes");
 
 const app = express();
 
-const allowedOrigin = "https://dreamweddingsgallery.netlify.app";
-
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: "https://dreamweddingsgallery.netlify.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
-
-app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
