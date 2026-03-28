@@ -1,39 +1,38 @@
 const express = require("express");
 const router = express.Router();
 
+const {
+  getMyTenantSettings,
+  updateMyTenantSettings,
+  getTenantStorageStats
+} = require("../controllers/tenantController");
+
 const authMiddleware = require("../middlewares/authMiddleware");
 const roleMiddleware = require("../middlewares/roleMiddleware");
-const upload = require("../middlewares/uploadMiddleware");
 
-const {
-  uploadMedia,
-  getMediaByAlbum,
-  deleteMedia,
-  deleteAllMediaByAlbum
-} = require("../controllers/mediaController");
+// 🔥 ndrysho këtë
+const uploadLogo = require("../middlewares/uploadLogoMiddleware");
 
-router.post(
-  "/upload",
+router.get(
+  "/me",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  upload.array("files", 50),
-  uploadMedia
+  getMyTenantSettings
 );
 
-router.get("/album/:albumId", getMediaByAlbum);
-
-router.delete(
-  "/:id",
+router.put(
+  "/me",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  deleteMedia
+  uploadLogo.single("logo"), // 🔥 KJO ESHTE FIX
+  updateMyTenantSettings
 );
 
-router.delete(
-  "/album/:albumId/all",
+router.get(
+  "/storage-stats",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  deleteAllMediaByAlbum
+  getTenantStorageStats
 );
 
 module.exports = router;

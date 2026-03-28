@@ -3,40 +3,40 @@ const router = express.Router();
 
 const authMiddleware = require("../middlewares/authMiddleware");
 const roleMiddleware = require("../middlewares/roleMiddleware");
-const upload = require("../middlewares/uploadMiddleware");
 
 const {
-  createAlbum,
-  getAlbumsByEvent,
-  getAlbumBySlug,
-  updateAlbum,
-  deleteAlbum
-} = require("../controllers/albumController");
+  createGuestSection,
+  getGuestSectionsByEvent,
+  updateGuestSection,
+  deleteGuestSection
+} = require("../controllers/guestSectionController");
 
 router.post(
   "/",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  upload.single("cover_image"),
-  createAlbum
+  createGuestSection
 );
 
-router.get("/event/:eventId", getAlbumsByEvent);
-router.get("/:eventSlug/:albumSlug", getAlbumBySlug);
+router.get(
+  "/event/:eventId",
+  authMiddleware,
+  roleMiddleware("super_admin", "studio_admin"),
+  getGuestSectionsByEvent
+);
 
 router.put(
   "/:id",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  upload.single("cover_image"),
-  updateAlbum
+  updateGuestSection
 );
 
 router.delete(
   "/:id",
   authMiddleware,
   roleMiddleware("super_admin", "studio_admin"),
-  deleteAlbum
+  deleteGuestSection
 );
 
 module.exports = router;

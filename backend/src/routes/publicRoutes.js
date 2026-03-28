@@ -1,14 +1,28 @@
 const express = require("express");
 const router = express.Router();
 
+const upload = require("../middlewares/uploadMiddleware");
+
 const {
   getPublicGallery,
-  downloadAlbumZip
+  getPublicAlbumMedia,
+  verifyGalleryPassword,
+  downloadWholeEventZip,
+  getGuestSectionBySlug,
+  uploadGuestMedia
 } = require("../controllers/publicController");
 
 router.get("/gallery/:slug", getPublicGallery);
+router.post("/gallery/:slug/verify-password", verifyGalleryPassword);
+router.get("/gallery/:slug/download", downloadWholeEventZip);
+router.get("/albums/:albumId/media", getPublicAlbumMedia);
 
-/* DOWNLOAD ALBUM ZIP */
-router.get("/albums/:albumId/download-zip", downloadAlbumZip);
+router.get("/guest-section/:slug", getGuestSectionBySlug);
+
+router.post(
+  "/guest-upload/:slug",
+  upload.array("files", 20),
+  uploadGuestMedia
+);
 
 module.exports = router;

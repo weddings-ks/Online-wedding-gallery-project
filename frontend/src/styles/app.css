@@ -223,3 +223,160 @@
     min-width: 100%;
   }
 }
+
+
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0f0f12;
+  border: 1px solid #1b1b22;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #1f1f25;
+  font-size: 14px;
+}
+
+.admin-table th {
+  color: #b9b9c7;
+  font-weight: 600;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: #15151b;
+  border: 1px solid #2a2a34;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bdbdc7;
+}
+
+.admin-muted {
+  color: #9b9ba5;
+  margin-top: 8px;
+}
+
+.danger-btn {
+  background: #2a1111 !important;
+  color: #ffb4b4 !important;
+  border: 1px solid #4b1e1e !important;
+}
+
+.sidebar-logo {
+  padding: 22px 18px 14px;
+  border-bottom: 1px solid #1d1d25;
+}
+
+.sidebar-logo h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #fff;
+}
+
+.sidebar-logo p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #9e9ead;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+}
+
+.sidebar-nav button {
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid #20202a;
+  background: #101016;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar-nav button:hover {
+  background: #161620;
+}
+
+.sidebar-nav button.active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+
+
+
+.stat-card span {
+  display: block;
+  color: #9e9ead;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1.1;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #a5a5af;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.media-list-section h3 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.empty-box {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid #1a1a1f;
+  background: #0b0b10;
+  color: #9f9fad;
+}
+
+.error-box {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #4b1e1e;
+  background: #1a0d0d;
+  color: #ffb4b4;
+}
+
+.success-box {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #1d4424;
+  background: #0f1b12;
+  color: #9fe3a1;
+}

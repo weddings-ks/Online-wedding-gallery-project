@@ -4,56 +4,84 @@
   }
 
   .admin-sidebar {
+    position: relative;
+    top: unset;
+    min-height: auto;
+    width: 100%;
+    padding: 16px 12px;
     border-right: none;
     border-bottom: 1px solid #111111;
   }
 
-  .stats-grid {
+  .sidebar-brand {
+    margin-bottom: 16px;
+    padding: 0 0 12px;
+  }
+
+  .sidebar-nav {
+    margin-top: 10px;
+  }
+
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 800px) {
-  .event-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .professional-event-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .vertical-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .vertical-actions .edit-btn,
+  .vertical-actions .delete-btn {
+    width: 100%;
   }
 
   .table-header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .small-btn,
-  .logout-btn {
-    width: 100%;
-  }
 }
 
 @media (max-width: 640px) {
   .admin-content {
-    padding: 16px;
+    padding: 16px 12px;
   }
 
-  .admin-topbar {
+  .topbar-content {
     flex-direction: column;
     align-items: flex-start;
   }
 
+  .page-heading h2,
+  .page-head h2,
   .admin-page h2 {
     font-size: 22px;
   }
+
+  .sidebar-link,
+  .small-btn,
+  .logout-btn {
+    width: 100%;
+  }
+
+  .event-row-main {
+    flex-direction: column;
+  }
+
+  .event-link-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .event-link-input {
+    min-width: 100%;
+  }
 }
-
-
-
-
-
-
-
-
-
-
 
 .media-list-section {
   margin-top: 30px;

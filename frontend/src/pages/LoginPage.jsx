@@ -13,12 +13,12 @@ function LoginPage() {
     try {
       setError("");
 
-      const res = await fetch(`${API_BASE}/api/auth/login-admin`, {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password })
       });
 
       const raw = await res.text();
@@ -40,7 +40,15 @@ function LoginPage() {
         throw new Error("Token mungon nga backend.");
       }
 
+      const role = data?.user?.role || data?.role || null;
+
+      if (!role) {
+        throw new Error("Role mungon nga backend.");
+      }
+
       localStorage.setItem("token", data.token);
+      localStorage.setItem("role", role);
+
       window.location.reload();
     } catch (err) {
       console.error("LOGIN ERROR:", err);
@@ -51,8 +59,21 @@ function LoginPage() {
   return (
     <div className="login-page">
       <form className="login-form" onSubmit={handleLogin}>
-        <h2>Dream Weddings-KS</h2>
-        <p>Hyr në panelin e menaxhimit të galerive ALBAN</p>
+        <div className="login-logo-wrap">
+  <a
+    href="https://www.instagram.com/accounts/login/?next=%2Fdasmagallery.photo&source=omni_redirect"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src="https://res.cloudinary.com/dmlszpk5l/image/upload/v1774117513/Untitled-1_cnunj3.png"
+      alt="Dasma Gallery"
+      className="login-logo"
+    />
+  </a>
+</div>
+        <h2>Emri Studios Tuaj</h2>
+        <p>Hyr në panelin e menaxhimit të galerive</p>
 
         <input
           type="email"

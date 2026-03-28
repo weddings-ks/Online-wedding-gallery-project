@@ -1,3 +1,66 @@
+import React, { memo, useCallback, useMemo } from "react";
+
+const AlbumRow = memo(function AlbumRow({
+  album,
+  onEdit,
+  onDelete
+}) {
+  const handleEdit = useCallback(() => {
+    onEdit(album);
+  }, [onEdit, album]);
+
+  const handleDelete = useCallback(() => {
+    onDelete(album.id);
+  }, [onDelete, album.id]);
+
+  return (
+    <div className="event-row modern-row">
+      <div className="album-row-content">
+        <div className="event-title">
+          {album.title || `Album #${album.id}`}
+        </div>
+
+        <div className="event-meta">
+          ID: {album.id}
+          {album.slug ? ` • ${album.slug}` : ""}
+        </div>
+
+        {album.cover_image_url ? (
+          <div className="album-cover-preview-wrap small">
+            <img
+              src={album.cover_image_url}
+              alt={album.title || "Album cover"}
+              className="album-cover-preview"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ) : (
+          <div className="event-description">Pa cover image</div>
+        )}
+      </div>
+
+      <div className="row-actions modern-actions">
+        <button
+          type="button"
+          className="edit-btn modern-btn"
+          onClick={handleEdit}
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
+          className="delete-btn modern-btn danger"
+          onClick={handleDelete}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+});
+
 function AlbumsPage({
   events,
   albumsByEvent,
@@ -12,17 +75,56 @@ function AlbumsPage({
   handleUpdateAlbum,
   handleDeleteAlbum,
   handleCancelEditAlbum,
-  isEditingAlbum,
+  isEditingAlbum
 }) {
+  const eventOptions = useMemo(() => {
+    return events.map((event) => (
+      <option key={event.id} value={event.id}>
+        {event.title || `Event #${event.id}`}
+      </option>
+    ));
+  }, [events]);
+
+  const albumItems = useMemo(() => {
+    return Array.isArray(albumsByEvent) ? albumsByEvent : [];
+  }, [albumsByEvent]);
+
+  const handleRefresh = useCallback(() => {
+    if (!albumForm.event_id) return;
+    fetchAlbumsByEvent(albumForm.event_id);
+  }, [fetchAlbumsByEvent, albumForm.event_id]);
+
+  const handleSubmit = useCallback(
+    (e) => {
+      if (isEditingAlbum) {
+        handleUpdateAlbum(e);
+      } else {
+        handleCreateAlbum(e);
+      }
+    },
+    [isEditingAlbum, handleUpdateAlbum, handleCreateAlbum]
+  );
+
+  const handleEditAlbum = useCallback(
+    (album) => {
+      handleStartEditAlbum(album);
+    },
+    [handleStartEditAlbum]
+  );
+
+  const handleDeleteOneAlbum = useCallback(
+    (albumId) => {
+      handleDeleteAlbum(albumId);
+    },
+    [handleDeleteAlbum]
+  );
+
   return (
     <div className="admin-page">
       <h2>Albums</h2>
       <p>Këtu krijohen, editohen dhe fshihen albumet për çdo event.</p>
 
-      <form
-        className="admin-form"
-        onSubmit={isEditingAlbum ? handleUpdateAlbum : handleCreateAlbum}
-      >
+      <form className="admin-form" onSubmit={handleSubmit}>
         <select
           name="event_id"
           value={albumForm.event_id}
@@ -31,11 +133,7 @@ function AlbumsPage({
           disabled={isEditingAlbum}
         >
           <option value="">Zgjidh eventin</option>
-          {events.map((event) => (
-            <option key={event.id} value={event.id}>
-              {event.title || `Event #${event.id}`}
-            </option>
-          ))}
+          {eventOptions}
         </select>
 
         <input
@@ -47,13 +145,48 @@ function AlbumsPage({
           required
         />
 
-        <input
-          type="text"
-          name="cover_image"
-          placeholder="Cover image URL (opsionale)"
-          value={albumForm.cover_image}
-          onChange={handleAlbumFormChange}
-        />
+        <div className="file-input-group">
+          <label className="file-input-label">
+            Cover image{" "}
+            {isEditingAlbum
+              ? "(opsionale - vetëm nëse don me ndërru)"
+              : "(opsionale)"}
+          </label>
+
+          <input
+            type="file"
+            name="cover_image"
+            accept="image/*"
+            onChange={handleAlbumFormChange}
+          />
+
+          {albumForm.cover_image &&
+            typeof albumForm.cover_image !== "string" && (
+              <div className="selected-file-name">
+                File i zgjedhur: {albumForm.cover_image.name}
+              </div>
+            )}
+
+          {isEditingAlbum &&
+            albumForm.cover_image_url &&
+            !albumForm.cover_image && (
+              <div className="selected-file-name">
+                Cover aktual ekziston.
+              </div>
+            )}
+        </div>
+
+        {albumForm.cover_image_url && !albumForm.cover_image && (
+          <div className="album-cover-preview-wrap">
+            <img
+              src={albumForm.cover_image_url}
+              alt={albumForm.title || "Album cover"}
+              className="album-cover-preview"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        )}
 
         <div className="form-actions-row">
           <button type="submit">
@@ -81,7 +214,7 @@ function AlbumsPage({
           <button
             className="small-btn"
             type="button"
-            onClick={() => fetchAlbumsByEvent(albumForm.event_id)}
+            onClick={handleRefresh}
             disabled={!albumForm.event_id}
           >
             Refresh
@@ -92,43 +225,17 @@ function AlbumsPage({
           <div className="empty-box">Zgjidh një event për të parë albumet.</div>
         ) : loadingAlbums ? (
           <div className="empty-box">Duke i ngarkuar albumet...</div>
-        ) : albumsByEvent.length === 0 ? (
+        ) : albumItems.length === 0 ? (
           <div className="empty-box">Nuk ka albume ende për këtë event.</div>
         ) : (
           <div className="event-list">
-            {albumsByEvent.map((album) => (
-              <div key={album.id} className="event-row">
-                <div>
-                  <div className="event-title">
-                    {album.title || `Album #${album.id}`}
-                  </div>
-                  <div className="event-meta">
-                    ID: {album.id}
-                    {album.slug ? ` • Slug: ${album.slug}` : ""}
-                  </div>
-                  <div className="event-description">
-                    {album.cover_image ? album.cover_image : "Pa cover image"}
-                  </div>
-                </div>
-
-                <div className="row-actions">
-                  <button
-                    type="button"
-                    className="edit-btn"
-                    onClick={() => handleStartEditAlbum(album)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => handleDeleteAlbum(album.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+            {albumItems.map((album) => (
+              <AlbumRow
+                key={album.id}
+                album={album}
+                onEdit={handleEditAlbum}
+                onDelete={handleDeleteOneAlbum}
+              />
             ))}
           </div>
         )}
@@ -137,4 +244,4 @@ function AlbumsPage({
   );
 }
 
-export default AlbumsPage;
+export default memo(AlbumsPage);

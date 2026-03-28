@@ -1,30 +1,39 @@
 const multer = require("multer");
 
-const storage = multer.memoryStorage();
+const MAX_FILE_SIZE_MB = 200; // 200MB per file
+const MAX_FILES_PER_REQUEST = 50;
 
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-    "video/mp4",
-    "video/quicktime",
-    "video/webm"
-  ];
+const allowedMimeTypes = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/quicktime",
+  "video/webm"
+]);
 
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Format file nuk lejohet."), false);
+function fileFilter(req, file, cb) {
+  if (allowedMimeTypes.has(file.mimetype)) {
+    return cb(null, true);
   }
-};
+
+  return cb(
+    new Error(
+      `Format file nuk lejohet për "${file.originalname}". Lejohen vetëm JPG, PNG, WEBP, HEIC, HEIF, MP4, MOV, WEBM.`
+    ),
+    false
+  );
+}
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter,
   limits: {
-    fileSize: 100 * 1024 * 1024
+    fileSize: MAX_FILE_SIZE_MB * 1024 * 1024,
+    files: MAX_FILES_PER_REQUEST
   }
 });
 

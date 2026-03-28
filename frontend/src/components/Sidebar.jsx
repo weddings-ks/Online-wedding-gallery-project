@@ -4,13 +4,14 @@ function Sidebar({ activePage, setActivePage }) {
     { key: "events", label: "Events" },
     { key: "albums", label: "Albums" },
     { key: "upload", label: "Upload Media" },
+    { key: "tenant-settings", label: "Tenant Settings" }
   ];
 
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-brand">
         <h1>Wedding Admin</h1>
-        <p>Këtu menaxhon evente, albume dhe media.</p>
+        <p>Këtu menaxhon evente, albume, media dhe branding-un e studios.</p>
       </div>
 
       <nav className="sidebar-nav">
